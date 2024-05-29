@@ -4,7 +4,7 @@ USE computer_db;
 
 CREATE TABLE pccpu(
 id_c int primary key auto_increment,
-model varchar(30),
+model varchar(50),
 freq smallint,
 cores tinyint,
 cost int
@@ -13,7 +13,7 @@ CHECK (cost >= 0)
 
 CREATE TABLE gpu(
 id_g int primary key auto_increment,
-model varchar(30),
+model varchar(50),
 vram tinyint,
 cost int
 CHECK (cost >= 0)
@@ -21,7 +21,7 @@ CHECK (cost >= 0)
 
 CREATE TABLE ram(
 id_r int primary key auto_increment,
-model varchar(30),
+model varchar(50),
 capacity tinyint,
 freq smallint,
 cost int
@@ -30,7 +30,7 @@ CHECK (cost >= 0)
 
 CREATE TABLE drive(
 id_dr int primary key auto_increment,
-model varchar(30),
+model varchar(50),
 capacity smallint,
 cost int
 CHECK (cost >= 0)
