@@ -785,7 +785,12 @@ class Program():
             self.button_pcs.clicked.connect(self.goto_viewpcs)
             self.button_emp.clicked.connect(self.goto_viewemp)
             self.button_edit.clicked.connect(self.goto_editpcs)
+            self.exitbutton.clicked.connect(self.quit)
+            
             self.adminframe.hide()
+
+        def quit(self):
+            self.close()
 
         def goto_editpcs(self):
             self.hide()

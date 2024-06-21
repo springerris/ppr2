@@ -28,8 +28,8 @@ model varchar(50) NOT NULL,
 capacity tinyint NOT NULL,
 freq smallint NOT NULL,
 cost int
-CHECK (capacity > 0)
-CHECK (freq > 0)
+CHECK (capacity > 0),
+CHECK (freq > 0),
 CHECK (cost > 0)
 );
 
@@ -38,7 +38,7 @@ id_dr int primary key auto_increment,
 model varchar(50) NOT NULL,
 capacity smallint NOT NULL,
 cost int
-CHECK (cost > 0)
+CHECK (cost > 0),
 CHECK (capacity > 0)
 );
 
@@ -129,11 +129,11 @@ login VARCHAR(50) NOT NULL,
 pwd   VARCHAR(50) NOT NULL,
 role  VARCHAR(3) NOT NULL DEFAULT "USR",
 CHECK (role = "USR" OR role = "ADM" OR role = "MNG")
-)
+);
 
 ALTER TABLE computer ADD state VARCHAR(20) NOT NULL DEFAULT "Хорошее";
 ALTER TABLE computer ADD check(state IN ("Хорошее","Удовлетворительное","Критическое"));
-SELECT * from computer c WHERE room_id is NULL 
+SELECT * from computer c WHERE room_id is NULL; 
 UPDATE computer SET state = "Удовлетворительное" WHERE id_pc IN (133,135,137,33,66,55,90,10,22,100,60,65);
 UPDATE computer SET state = "Критическое" WHERE id_pc IN (133,10,15,9);
 
