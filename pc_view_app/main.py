@@ -1,3 +1,47 @@
+"""
+Производственная практика ПП02 по модулю ПМ02. ПМ.02 Осуществление интеграции
+программных модулей
+Название: приложение для выполнения инвентаризации помещений проведения киберспортивных соревнований.
+Разработал: Асанишвили Лука Гелович ТИП-63
+Дата: 10.05.2025
+Язык: Python
+Краткое описание:
+Данное программное обеспечение предназначено для выполнения инвентаризации 
+помещений проведения киберспортивных соревнований.
+Задание:
+Разработать ПО, которое должно обеспечивать:
+▪ Ффункции просмотра списка компьютеров в каждом отделении, их характеристик, стоимости и состояния. 
+  Данные выводятся в виде таблицы и списка. 
+▪ Также ПО должно выводить список ФИО и должностей сотрудников в виде таблицы.
+▪ Функционал перемещения компьютеров на склад
+▪ Функционал перемещения компьютеров со склада в отделения.
+▪ Входные данные поступают в виде информации, заполняемой пользователем на форме.
+▪ Выходные данные показываются в списках, таблицах и всплывающих окнах.
+
+Формы, используемые в программе:
+▪ Приветствия
+▪ Авторизации
+▪ Регистрации
+▪ Главного меню
+▪ Просмотра сотрудников
+▪ Просмотра компьютеров
+▪ Редактирования списка компьютеров + просмотра склада
+
+Основные классы:
+▪ Program() - Является главным классом. Управляет ходом программы
+▪ Welcome_window(QWidget) - Реализация окна приветствия. Даёт возможность выбрать регистрацию или авторизацию как способ входа.
+▪ Main_menu(QWidget) - Реализация главного меню. Содержит меторы quit, goto_editpcs(переход в редактирование списка компьютеров), 
+goto_viewpcs(переход в просмотр компьютеров), goto_viewemp(переход в просмотр сотрудников)
+▪ Registration_window(QWidget) - Реализует окно регистрации. Имеет методы проверки пароля на правильность и метод проверки занятости логина.
+▪ Authorization_window(QWidget) - Реализация окна авторизации. Имеет методы проверки существования аккаунта с таким логином и паролем.
+▪ View_pcs(QWidget) - Реализация окна просмотра списка компьютеров. Имеет метод просмотра характеристик компьютера, выбора помещения из списка, заполнения таблицы данными.
+▪ View_employees(QWidget) - Реализация окна просмотра сотрудников. Имеет методы сортировки по ФИО и по должности.
+▪ Edit_pcs(QWidget) - Реализация окна редактирования списка компьютеров. Имеет методы как у View_pcs и также: перемещения компьютеров на склад, со склада, списывания со склада.
+"""
+
+
+
+
 import sys
 import mysql.connector
 from mysql.connector import errorcode
@@ -12,7 +56,7 @@ from dbconnector import Dbcon
 
 
 
-class Program():
+class Program():                            # Класс главной программы
     def __init__(self):
         self.main_menu = self.Main_menu()
         self.dbcon = Dbcon()
@@ -21,9 +65,9 @@ class Program():
         uic.loadUi("warning_dialog.ui",self.dlg)
       
 
-    class Main_menu(QWidget):
+    class Main_menu(QWidget):               # Класс главного окна
 
-        class Edit_pcs(QWidget):
+        class Edit_pcs(QWidget):            # Класс окна редактирования компьютеров
             def __init__(self):
                 super().__init__()
                 uic.loadUi("edit_pcs.ui",self)
@@ -485,7 +529,7 @@ class Program():
                 self.pc_list_2.addItem(QListWidgetItem(f"Частота монитора: {freq}"))
                 self.pc_list_2.addItem(QListWidgetItem(f"Цена компонентов (в руб.): {costsum}"))                
 
-        class View_employees(QWidget):
+        class View_employees(QWidget):      # Класс окна просмотра сотрудников
 
             def __init__(self):
                 super().__init__()
@@ -546,7 +590,7 @@ class Program():
 
 
 
-        class View_pcs(QWidget):
+        class View_pcs(QWidget):            # Класс окна просмотра компьютеров
             def __init__(self):
                 super().__init__()
                 uic.loadUi("view_pcs.ui",self)
@@ -567,7 +611,7 @@ class Program():
                 self.pc_table.setColumnWidth(9,160)
                 self.pc_table.setColumnWidth(10,160)
                 self.pc_table.setColumnWidth(11,170)
-                self.data = []
+                self.data = []              # Содержит данные, полученные из БД
 
 
                 program.dbcon.cur.execute("SELECT adres FROM room")
@@ -578,7 +622,7 @@ class Program():
 
                 self.show()
 
-            def check_quality(self):
+            def check_quality(self):        # Метод проверки состояния компьютеров
                 for i in range(len(self.data)):
                     if self.pc_table.item(i,11).text() == "Удовлетворительное":
                         for j in range(12):
@@ -587,7 +631,7 @@ class Program():
                         for j in range(12):
                             self.pc_table.item(i,j).setBackground(QtGui.QColor(161, 56, 56))     
 
-            def query_pcs(self):
+            def query_pcs(self):            # Метод запроса компьютеров из БД
                 self.listclear()
                 self.data = []
                 adr = self.adres_box.currentText()
@@ -664,7 +708,7 @@ class Program():
 
                 self.fill_table()
                 
-            def fill_table(self):
+            def fill_table(self):       # Метод распределения полученных данных по таблице
                 self.pc_table.setRowCount(len(self.data))
                 for i in range(len(self.data)):
                     self.pc_table.setItem(i,0,QTableWidgetItem(self.data[i][0]))
@@ -825,7 +869,7 @@ class Program():
             self.pushButton_2.clicked.connect(self.openreg)
         
 
-        class Authorization_window(QWidget):
+        class Authorization_window(QWidget):    # Класс окна авторизации
             def __init__(self):
                 super().__init__()
                 uic.loadUi("authorization.ui",self)
@@ -872,7 +916,7 @@ class Program():
                 
 
 
-        class Registration_window(QWidget):
+        class Registration_window(QWidget):     # Класс окна регистрации
             
             def __init__(self):
                     super().__init__()
@@ -983,8 +1027,9 @@ class Program():
                             program.dbcon.cnx = mysql.connector.connect(user='pc_viewer', password='', database='computer_db')
                             program.dbcon.setupcur()
 
+                                                # Запуск программы
 app = QApplication(sys.argv)
-program = Program()
+program = Program() 
 sys.exit(app.exec())
 
 
